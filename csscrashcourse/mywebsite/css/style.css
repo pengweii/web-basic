@@ -41,7 +41,7 @@ body{
 #showcase{
     background-image: url(../images/bg2m.jpg);
     background-position: top;
-    min-height: 300px;
+    min-height: 300px; /* 响应式布局height */
     margin-bottom: 30px;
     text-align: center;
 }
@@ -78,6 +78,7 @@ body{
     margin-top:40px;
 }
 
+/* 还没学，待注释 */
 @media(max-width:600px){
     #main{
         width:100%;

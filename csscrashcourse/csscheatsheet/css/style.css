@@ -11,7 +11,7 @@ body{
     font-size: 16px;
     font-weight: normal;
     /* same as above*/
-    font: normal  16px Arial, Helvetica, sans-serif;
+    /* font: normal  16px Arial, Helvetica, sans-serif; */
     
     line-height: 1.6em;
     margin:0
