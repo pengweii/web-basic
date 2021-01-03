@@ -151,6 +151,8 @@ a{
     border: 1px solid #000;
     margin-top: 30px;
     position:relative;
+    background-image: url('../images/bg.jpg');
+    background-position: center top;
 }
 
 .p-box h1{
@@ -163,4 +165,25 @@ a{
     position: absolute;
     bottom: 40px;
     right: 40px;
+}
+
+.fix-me{
+    position:fixed;
+    top:400px;
+}
+
+.my-list li:first-child{
+    background: red;
+}
+
+.my-list li:last-child{
+    background: blue;
+}
+
+.my-list li:nth-child(5){
+    background: yellow;
+}
+
+.my-list li:nth-child(even){
+    background: gray;
 }
