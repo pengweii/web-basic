@@ -106,3 +106,45 @@
 
 // Traversing the DOM
 
+let val;
+
+const list = document.querySelector('ul.collection');
+const listItem = document.querySelector('li.collection-item:first-child');
+
+val = list;
+
+// Get child nodes
+val = list.childNodes; //返回一个node list，这样会把换行等text也算进去
+val = list.childNodes[0].nodeName;
+val = list.childNodes[0].nodeType;
+// nodeType:
+// 1 - Element
+// 2 - Attribute(deprecated)
+// 3 - Text node
+// 8 - Comment
+// 9 - Document itself
+// 10 - Doctype
+
+// Get children element nodes
+val = list.children; //返回一个collection，不会把换行算进去
+val = list.children[3].children[0];
+
+val = list.firstChild;
+val = list.firstElementChild; //不算text
+
+val = list.childElementCount;
+
+// Get parent node
+val = listItem.parentNode;
+val = listItem.parentElementNode;
+val = listItem.parentElement.parentElement;
+
+// Get next sibling
+val = listItem.nextSibling;
+val = listItem.nextElementSibling;
+
+// Get previous sibling
+val = listItem.previousSibling;
+val = listItem.previousElementSibling;
+
+console.log(val);
