@@ -122,18 +122,18 @@
 
 // MOUSE EVENTS
 
-const clearBtn = document.querySelector('.clear-tasks');
-const card = document.querySelector('.card');
-const heading = document.querySelector('h5');
+// const clearBtn = document.querySelector('.clear-tasks');
+// const card = document.querySelector('.card');
+// const heading = document.querySelector('h5');
 
-// Event Handler
-function runEvent(e){
-    console.log(`EVENT TYPE: ${e.type}`);
+// // Event Handler
+// function runEvent(e){
+//     console.log(`EVENT TYPE: ${e.type}`);
 
-    heading.textContent = `MouseX: ${e.offsetX} MouseY: ${e.offsetY}`;
+//     heading.textContent = `MouseX: ${e.offsetX} MouseY: ${e.offsetY}`;
 
-    document.body.style.backgroundColor = `rgb(${e.offsetX}, ${e.offsetY}, 40)`;
-}
+//     document.body.style.backgroundColor = `rgb(${e.offsetX}, ${e.offsetY}, 40)`;
+// }
 
 // Click
 // clearBtn.addEventListener('click', runEvent);
@@ -150,4 +150,31 @@ function runEvent(e){
 // card.addEventListener('mouseout', runEvent);
 
 // Mousemove
-card.addEventListener('mousemove', runEvent);
+// card.addEventListener('mousemove', runEvent);
+
+
+// Keyboard & Input Event
+const form = document.querySelector('form');
+const taskInput = document.getElementById('task');
+const heading = document.querySelector('h5');
+
+// Clear input
+taskInput.value = '';
+
+// form.addEventListener('submit', runEvent);
+
+// Keydown / Keyup / Keypress
+taskInput.addEventListener('keydown', runEvent);
+// Focus / Blue
+taskInput.addEventListener('focus', runEvent);
+// Cut / Paste
+taskInput.addEventListener('cut', runEvent);
+// Input
+taskInput.addEventListener('input', runEvent);
+// Change 在选择框更改选项时触发
+
+function runEvent(e){
+    console.log(`EVENT TYPE:  ${e.type}`);
+    // console.log(taskInput.value);
+    // heading.innerText = e.target.value;
+}

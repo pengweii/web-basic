@@ -143,26 +143,26 @@ const cars = ['Ford', 'Toyota', 'Chevy', 'Honda'];
 // });
 
 // Map
-// const users = [
-//     {id: 1, name: 'John'},
-//     {id: 2, name: 'Mike'},
-//     {id: 3, name: 'Eric'}
-// ];
+const users = [
+    {id: 1, name: 'John'},
+    {id: 2, name: 'Mike'},
+    {id: 3, name: 'Eric'}
+];
 
-// const ids = users.map(function(users){
-//     return users.id;
-// });
+const ids = users.map(function(users){
+    return users.id;
+});
 
-// console.log(ids);
+console.log(ids);
 
 
 // For-in Loop
-const user = {
-    firstName: 'John',
-    lastName: 'Doe',
-    age: 40
-}
+// const user = {
+//     firstName: 'John',
+//     lastName: 'Doe',
+//     age: 40
+// }
 
-for(let x in user){
-    console.log(`${x} : ${user[x]}`);
-}
+// for(let x in user){
+//     console.log(`${x} : ${user[x]}`);
+// }
