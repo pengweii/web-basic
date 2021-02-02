@@ -160,14 +160,16 @@ marriedJessica.lastName = 'John';
 // console.log('Before married: ', jessica); // John
 // console.log('After married: ', marriedJessica); // John
 
-// 复制objects，assign是浅拷贝，只会拷贝第一层，若object里面还有object，
+// 复制objects，assign是浅拷贝，只会拷贝第一层，若object里面还有object(如array)，
 // 则会和前面的方法一样，执行同一个内存区域
 const jessica2 = {
   firstName: 'Jessica',
   lastName: 'Williams',
-  age: 27
+  age: 27,
+  family: ['Alice', 'Bob']
 };
 const jessicaCopy = Object.assign({}, jessica2);
 jessicaCopy.lastName = 'John';
+jessicaCopy.family.push('Mary');
 console.log('Before married: ', jessica2);
 console.log('After married: ', jessicaCopy);
