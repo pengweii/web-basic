@@ -155,7 +155,9 @@ console.log(addVAT(100));
 
 */
 
-// Coding Challenge #1
+/*
+////////////////////////////
+// SEC Coding Challenge #1
 
 const poll = {
   question: 'What is your favourite programming language?',
@@ -163,7 +165,25 @@ const poll = {
   // This generates [0, 0, 0, 0]. More in the next section 😃
   answers: new Array(4).fill(0),
 
-  displayResults(type) {
+  registerNerAnswer() {
+    const answer = Number(
+      prompt(`${this.question}\n${this.options.join('\n')}`)
+    );
+    // if (answer >= 0 && answer <= 3) {
+    //   this.answers[answer]++;
+    // } else {
+    //   alert('Please input correct number');
+    // }
+
+    typeof answer === 'number' &&
+      answer < this.options.length &&
+      this.answers[answer]++;
+
+    this.displayResults();
+    this.displayResults('string');
+  },
+
+  displayResults(type = 'array') {
     if (type === 'string') {
       console.log(
         `Poll results are ${this.answers[0]}, ${this.answers[1]}, ${this.answers[2]}, ${this.answers[3]},`
@@ -174,23 +194,55 @@ const poll = {
       console.log('Wrong type!');
     }
   },
-
-  registerNerAnswer() {
-    const answerStr = prompt(
-      'What is your favorite programming language?\n0:JavaScript\n1:Python\n2:Rust\n3:C++'
-    );
-    const answer = Number(answerStr);
-    if (answer >= 0 && answer <= 3) {
-      this.answers[answer]++;
-    } else {
-      alert('Please input correct number');
-    }
-    // console.log(answer);
-    // console.log(this.answers);
-    this.displayResults();
-  },
 };
 
 document
   .querySelector('.poll')
   .addEventListener('click', poll.registerNerAnswer.bind(poll));
+
+poll.displayResults.call({ answers: [5, 2, 3] });
+*/
+
+// NOTE 立即调用函数表达式(IIFE)
+(function () {
+  console.log('This will never run again');
+})();
+
+(() => console.log('This will also never run again'))();
+
+// NOTE 闭包(closure)
+// Example 1
+let f;
+
+const g = function () {
+  const a = 23;
+  f = function () {
+    console.log(a * 2);
+  };
+};
+
+g();
+f();
+
+// Example 2
+const boardPassengers = function (n, wait) {
+  const perGroup = n / 3;
+  setTimeout(function () {
+    console.log(`We are now boarding all ${n} passengers`);
+    console.log(`There are 3 groups, each with ${perGroup} passengers`);
+  }, wait * 1000);
+  console.log(`Will start boarding in ${wait} seconds`);
+};
+
+const perGroup = 1000;
+boardPassengers(180, 3);
+
+// SEC Coding Challenge ❌
+(function () {
+  const header = document.querySelector('h1');
+  header.style.color = 'red';
+
+  document.querySelector('body').addEventListener('click', function () {
+    header.style.color = 'blue';
+  });
+})();
