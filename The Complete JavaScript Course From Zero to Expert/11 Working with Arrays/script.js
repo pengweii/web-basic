@@ -377,6 +377,125 @@ const calcAverageArrow = ages =>
 console.log(calcAverageArrow([5, 2, 4, 1, 15, 8, 3]));
 */
 
+// SEC Practice
+// 1. 略
+
+// 2.
+// 超过1000元的人数
+// const numDeposits1000 = accounts
+//   .flatMap(acc => acc.movements)
+//   .filter(mov => mov >= 1000).length;
+
+const numDeposits1000 = accounts
+  .flatMap(acc => acc.movements)
+  .reduce((count, cur) => (cur >= 1000 ? count + 1 : count), 0);
+
+// CAUTION 注意：上面的count+1不可以写成count++，但是可以写成++count
+// a++除了将a+1，还会返回原来的a
+let a = 10;
+console.log(a++); // 10
+console.log(a); // 11
+
+// 3.
+// reduce方法的累加值不只可以是数组，还可以是其他类型的，比如object
+// const sums = accounts
+const { deposits, withdrawals } = accounts
+  .flatMap(acc => acc.movements)
+  .reduce(
+    (sums, cur) => {
+      // cur > 0 ? (sums.deposits += cur) : (sums.withdrawals += cur);
+      sums[cur > 0 ? 'deposits' : 'withdrawals'] += cur;
+      return sums; // 箭头函数有花括号时一定要显式返回
+    },
+    { deposits: 0, withdrawals: 0 }
+  );
+console.log(deposits, withdrawals);
+
+// 4. Convert title case
+// this is a nice title => This Is a Nice Title
+function convertTitleCase(title) {
+  const capitalize = str => str[0].toUpperCase() + str.slice(1);
+
+  const exceptions = ['a', 'an', 'and', 'the', 'but', 'or', 'on', 'in', 'with'];
+
+  const titleCase = title
+    .toLowerCase()
+    .split(' ')
+    .map(word => (exceptions.includes(word) ? word : capitalize(word)))
+    .join(' ');
+
+  return capitalize(titleCase); // 确保第一个单词即使在exceptions中也要首字母大写
+}
+
+console.log(convertTitleCase('this is a LONG title but not too long'));
+
+// SEC Coding Challenge #4
+const dogs = [
+  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+  { weight: 8, curFood: 200, owners: ['Matilda'] },
+  { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
+  { weight: 32, curFood: 340, owners: ['Michael'] },
+];
+
+// 1.
+dogs.forEach(function (dog) {
+  dog.recommendedFood = Math.trunc(dog.weight ** 0.75 * 28);
+  console.log(dog.recommendedFood);
+});
+
+// 2.
+const dogSarah = dogs.find(dog => dog.owners.includes('Sarah'));
+console.log(
+  `Sarah's dog is eating too ${
+    dogSarah.curFood > dogSarah.recommendedFood * 1.1 ? 'much' : 'little'
+  }`
+);
+
+// 3.
+const ownersEatTooMuch = dogs
+  .filter(dog => dog.curFood > dog.recommendedFood)
+  .flatMap(dog => dog.owners);
+console.log(ownersEatTooMuch);
+
+const ownersEatTooLittle = dogs
+  .filter(dog => dog.curFood < dog.recommendedFood)
+  .flatMap(dog => dog.owners);
+console.log(ownersEatTooLittle);
+
+// 4.
+// console.log(
+//   `${ownersEatTooMuch[0]} and ${ownersEatTooMuch[1]} and ${
+//     ownersEatTooMuch[2] + "'s dogs eat too much!"
+//   }`
+// );
+console.log(`${ownersEatTooMuch.join(' and ')}'s dogs eat too much!`);
+
+// 5.
+const exactFood = dogs.some(dog => dog.curFood === dog.recommendedFood);
+console.log(exactFood);
+
+// 6.
+const okayFood = dogs.some(
+  dog =>
+    dog.curFood <= dog.recommendedFood * 1.1 &&
+    dog.curFood >= dog.recommendedFood * 0.9
+);
+console.log(okayFood);
+
+// 7.
+const okayFoodDogs = dogs.filter(
+  dog =>
+    dog.curFood <= dog.recommendedFood * 1.1 &&
+    dog.curFood >= dog.recommendedFood * 0.9
+);
+console.log(okayFoodDogs);
+
+// 8.
+const dogsCopy = dogs.slice();
+dogsCopy.sort((a, b) => a.recommendedFood - b.recommendedFood);
+console.log(dogsCopy);
+
+/*
 // NOTE map()
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
@@ -478,3 +597,32 @@ console.log(movements.sort()); //[-130, -400, -650, 1300, 200, 3000, 450, 70]
 // });
 movements.sort((a, b) => a - b);
 console.log(movements);
+
+
+// NOTE 其他方式创建array
+// empty + fill
+// 当参数只有一个数字的时候，创建的array是以这个数字为长度的空数组
+const x = new Array(7); // [empty × 7]
+// 这个空数组只能调用fill方法
+x.fill(1, 3, 5); // 索引3、4填上1
+
+// Array.from()
+const y = Array.from({ length: 7 }, () => 1);
+console.log(y);
+
+const z = Array.from({ length: 7 }, (cur, i) => i + 1);
+console.log(z);
+
+// 使用querySelectorAll()返回的是nodelist而非array，没有map等方法，使用Array.from()
+// 可以很方便的将nodelist转化为array
+labelBalance.addEventListener('click', function () {
+  const movementsUI = Array.from(
+    document.querySelectorAll('.movements__value'),
+    el => Number(el.textContent.replace('€', ''))
+  );
+  console.log(movementsUI);
+
+  // 也可以用展开运算符，但是那样就不方便chaining
+  const movementsUI2 = [...document.querySelectorAll('.movements__value')];
+});
+*/
