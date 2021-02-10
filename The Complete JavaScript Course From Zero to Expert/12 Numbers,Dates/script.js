@@ -22,8 +22,8 @@ const account1 = {
     '2020-04-01T10:17:24.185Z',
     '2020-05-08T14:11:59.604Z',
     '2020-05-27T17:01:17.194Z',
-    '2020-07-11T23:36:17.929Z',
-    '2020-07-12T10:51:36.790Z',
+    '2021-02-05T23:36:17.929Z',
+    '2021-02-09T10:51:36.790Z',
   ],
   currency: 'EUR',
   locale: 'pt-PT', // de-DE
@@ -81,19 +81,41 @@ const inputClosePin = document.querySelector('.form__input--pin');
 /////////////////////////////////////////////////
 // Functions
 
-const displayMovements = function (movements, sort = false) {
+const formatMovementDate = function (date) {
+  const calcDaysPassed = (date1, date2) =>
+    Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
+
+  const daysPassed = calcDaysPassed(new Date(), date);
+
+  if (daysPassed === 0) return 'Today';
+  if (daysPassed === 1) return 'Yesterday';
+  if (daysPassed <= 7) return `${daysPassed} days ago`;
+
+  const day = `${date.getDay()}`.padStart(2, 0);
+  const month = `${date.getMonth() + 1}`.padStart(2, 0);
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};
+
+const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
 
-  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  const movs = sort
+    ? acc.movements.slice().sort((a, b) => a - b)
+    : acc.movements;
 
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+    const date = new Date(acc.movementsDates[i]);
+    const displayDate = formatMovementDate(date);
 
     const html = `
       <div class="movements__row">
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
+        <div class="movements__date">${displayDate}</div>
         <div class="movements__value">${mov.toFixed(2)}€</div>
       </div>
     `;
@@ -142,7 +164,7 @@ createUsernames(accounts);
 
 const updateUI = function (acc) {
   // Display movements
-  displayMovements(acc.movements);
+  displayMovements(acc);
 
   // Display balance
   calcDisplayBalance(acc);
@@ -154,6 +176,11 @@ const updateUI = function (acc) {
 ///////////////////////////////////////
 // Event handlers
 let currentAccount;
+
+// Fake Always Logged In
+currentAccount = account1;
+updateUI(currentAccount);
+containerApp.style.opacity = 100;
 
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
@@ -170,6 +197,15 @@ btnLogin.addEventListener('click', function (e) {
       currentAccount.owner.split(' ')[0]
     }`;
     containerApp.style.opacity = 100;
+
+    // Create current time
+    const now = new Date();
+    const day = `${now.getDay()}`.padStart(2, 0);
+    const month = `${now.getMonth() + 1}`.padStart(2, 0);
+    const year = now.getFullYear();
+    const hour = `${now.getHours()}`.padStart(2, 0);
+    const min = `${now.getMinutes()}`.padStart(2, 0);
+    labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
 
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
@@ -198,6 +234,10 @@ btnTransfer.addEventListener('click', function (e) {
     currentAccount.movements.push(-amount);
     receiverAcc.movements.push(amount);
 
+    // Add transfer date
+    currentAccount.movementsDates.push(new Date().toISOString());
+    receiverAcc.movementsDates.push(new Date().toISOString());
+
     // Update UI
     updateUI(currentAccount);
   }
@@ -211,6 +251,9 @@ btnLoan.addEventListener('click', function (e) {
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     // Add movement
     currentAccount.movements.push(amount);
+
+    // Add loan date
+    currentAccount.movementsDates.push(new Date().toISOString());
 
     // Update UI
     updateUI(currentAccount);
@@ -248,11 +291,12 @@ btnSort.addEventListener('click', function (e) {
   sorted = !sorted;
 });
 
+/*
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
 
-// js中只有一种数学数据类型，就是小数float
+// js中只有一种数学数据类型，就是小数float，64位，其中只有53位存数字，其他位用于存小数点位置和数符
 // 因此js无法用于高精度的科学计算
 console.log(23 === 23.0); // true
 console.log(0.1 + 0.2); // 0.30000000000000004
@@ -324,8 +368,69 @@ const isEven = n => n % 2 === 0;
 console.log(isEven(4));
 console.log(isEven(5));
 
-labelBalance.addEventListener('click', function () {
-  [...document.querySelectorAll('.movements__row')].forEach(function (row, i) {
-    if (i % 2 === 0) row.style.backgroundColor = 'orangered';
-  });
-});
+// labelBalance.addEventListener('click', function () {
+//   [...document.querySelectorAll('.movements__row')].forEach(function (row, i) {
+//     if (i % 2 === 0) row.style.backgroundColor = 'orangered';
+//   });
+// });
+
+// bigint 类型是primitive
+// js可以存的最大精确数：
+console.log(2 ** 53 - 1);
+console.log(Number.MAX_SAFE_INTEGER);
+// 比这个大的数字有时候正确有时候错误
+console.log(2 ** 53 + 1);
+console.log(2 ** 53 + 2);
+
+console.log(347810674891058940158490n);
+console.log(BigInt(347810674891058940158490)); // 用这个方法时会和原来的数不一样
+
+// Operations
+// 大数和大数之间可以正常进行运算，但是大数不能和普通数混合运算
+// 比较运算、字符串连接运算除外
+// console.log(20n + 20); // 报错
+console.log(20n === 20); // false 因为===不会做type coercion
+console.log(20n == '20'); // true 因为==会做type coercion
+console.log(20n > 5); // true
+
+const huge = 347810674891058940158490n;
+console.log(huge + ' is really big!');
+
+// 除法
+console.log(10n / 3n); // 3n
+
+
+// NOTE Dates
+// Create a date
+const now = new Date();
+console.log(now);
+
+console.log(new Date('Aug 02 2020 9:41'));
+console.log(new Date('December 24, 2021'));
+console.log(new Date(2021, 2, 10, 9, 43)); // 月份是0开始的
+console.log(new Date(2021, 2, 33)); // 日期超过会自动转换到下一个月
+console.log(new Date(account1.movementsDates[0]));
+
+console.log(new Date(0));
+
+const future = new Date(2077, 2, 10, 9, 43);
+console.log(future.getFullYear());
+console.log(future.getMonth()); // 从0开始
+console.log(future.toISOString());
+console.log(future.getTime());
+
+console.log(new Date(3382566180000));
+
+console.log(Date.now()); // 当前时间戳
+
+future.setFullYear(2040);
+*/
+
+const future = new Date(2077, 2, 10, 9, 43);
+console.log(+future);
+
+const calcDaysPassed = (date1, date2) =>
+  Math.abs(date2 - date1) / (1000 * 60 * 60 * 24);
+
+const days1 = calcDaysPassed(new Date(2077, 2, 10), new Date(2077, 2, 15));
+console.log(days1);
