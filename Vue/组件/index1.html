@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>组件使用中的细节点</title>
+    <script src="vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <table>
+        <tbody>
+          <!-- 若直接用组件row，则在渲染时row元素会与table处于同一级，而不是在tbody中
+          因为h5的语法，tbody里面必须是tr。遇到这种情况，可以使用is属性。
+          同理，ul、ol里面得是li，select里面得是option -->
+          <tr is="row"></tr>
+          <tr is="row"></tr>
+          <tr is="row"></tr>
+        </tbody>
+      </table>
+
+      <!-- 使用ref引用获取dom元素 -->
+      <!-- <div ref="hello" @click="handleClick">Hello World</div> -->
+
+      <!-- 在子组件上的ref获取的是子组件的引用 -->
+      <counter ref="counter1" @change="handleChange"></counter>
+      <counter ref="counter2" @change="handleChange"></counter>
+      <div>{{total}}</div>
+    </div>
+
+    <script>
+      Vue.component('row', {
+        // 在子组件里定义data时data必须是函数，这样每个子组件的数据存储是独立的，不会相互影响
+        data: function () {
+          return {
+            content: 'this is a row',
+          };
+        },
+        template: '<tr><td>{{content}}</td></tr>',
+      });
+
+      Vue.component('counter', {
+        template: '<div @click="handleClick">{{number}}</div>',
+        data: function () {
+          return {
+            number: 0,
+          };
+        },
+        methods: {
+          handleClick: function () {
+            this.number++;
+            this.$emit('change');
+          },
+        },
+      });
+
+      var vm = new Vue({
+        el: '#app',
+        data: {
+          total: 0,
+        },
+        methods: {
+          handleClick: function () {
+            console.log(this.$refs.hello.innerHTML);
+          },
+          handleChange: function () {
+            this.total =
+              this.$refs.counter1.number + this.$refs.counter2.number;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

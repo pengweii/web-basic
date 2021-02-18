@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>父子组件传值</title>
+    <script src="vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <!-- 父组件通过属性向子组件传递数据 -->
+      <counter :count="2" @change="handleInc"></counter>
+      <counter :count="3" @change="handleInc"></counter>
+
+      <div>{{total}}</div>
+    </div>
+
+    <script>
+      var counter = {
+        props: ['count'],
+        data: function () {
+          return {
+            number: this.count,
+          };
+        },
+        template: '<div @click="handleClick">{{number}}</div>',
+        methods: {
+          handleClick: function () {
+            // 子组件不应改变父组件传过来的数据，因为如果是引用型数据，会影响其他组件
+            //this.count++;
+
+            // 如果要修改，则可以拷贝一个副本，修改副本即可
+            this.number = this.number + 2;
+            this.$emit('change', 2);
+          },
+        },
+      };
+
+      var vm = new Vue({
+        el: '#app',
+        data: {
+          total: 5,
+        },
+        components: {
+          counter,
+        },
+        methods: {
+          handleInc: function (step) {
+            this.total += step;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue中的条件渲染</title>
+    <script src="vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <!-- v-if为false时元素不存在 -->
+      <div v-if="show">{{message}}</div>
+      <!-- v-else-if -->
+      <div v-else>Bye World</div>
+      <!-- v-show为false时元素存在，只不过display=none，不涉及dom删除添加，性能更好 -->
+      <div v-show="show">{{message}}</div>
+
+      <!-- key值用法：vue会测试复用页面元素，若不设置key，则input里的内容会被保留 -->
+      <div v-if="show">用户名：<input key="username" /></div>
+      <div v-else>邮箱名：<input key="password" /></div>
+    </div>
+
+    <script>
+      var vm = new Vue({
+        el: '#app',
+        data: {
+          show: false,
+          message: 'Hello World',
+        },
+      });
+    </script>
+  </body>
+</html>

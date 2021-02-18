@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>组件参数校验与非props特性</title>
+    <script src="vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <child content="123456"></child>
+      <!-- <child :content="123"></child> -->
+    </div>
+
+    <script>
+      Vue.component('child', {
+        // 对传入参数进行类型校验
+        props: {
+          // content: [String, Number],
+          content: {
+            type: String,
+            required: true, // 必须要传，不能为空
+            default: 'default value', // 若不传，则为default value
+            validator: function (value) {
+              return value.length > 5;
+            },
+          },
+        },
+        template: '<div>{{content}}</div>',
+      });
+
+      var vm = new Vue({
+        el: '#app',
+      });
+    </script>
+  </body>
+</html>

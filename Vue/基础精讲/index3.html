@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>计算属性、方法、侦听器</title>
+    <script src="vue.js"></script>
+  </head>
+  <body>
+    <div id="app">{{fullName}} {{age}}</div>
+
+    <script>
+      var vm = new Vue({
+        el: '#app',
+        data: {
+          firstName: 'Dell',
+          lastName: 'Lee',
+          fullName: 'Dell Lee',
+          age: 28,
+        },
+        // 计算属性
+        // 有缓存机制，若参加计算的变量没有发生变化，则再次渲染页面时不会重新计算
+        // computed: {
+        //   fullName: function () {
+        //     return this.firstName + ' ' + this.lastName;
+        //   },
+        // },
+
+        // 方法
+        // 没有缓存机制，性能不如计算属性
+        // methods: {
+        //   fullName: function () {
+        //     return this.firstName + ' ' + this.lastName;
+        //   },
+        // },
+
+        // 侦听器
+        // 类似计算属性，只当和fullName相关的变量改变时才重新计算
+        watch: {
+          firstName: function () {
+            this.fullName = this.firstName + ' ' + this.lastName;
+          },
+          lastName: function () {
+            this.fullName = this.firstName + ' ' + this.lastName;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

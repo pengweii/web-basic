@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue中的列表渲染</title>
+    <script src="vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <div v-for="(item, index) in list" :key="item.id">
+        {{item.text}}---{{index}}
+      </div>
+
+      <!-- 模板占位符 -->
+      <!-- <template v-for="(item, index) in list" :key="item.id">
+        <div>{{item.text}}---{{index}}</div>
+        <span>{{item.text}}</span>
+      </template> -->
+
+      <!-- 循环对象 -->
+      <div v-for="(item, key, index) of userInfo">{{item}}</div>
+    </div>
+    <script>
+      // 若通过数组下标修改数据，页面不会随之发生变化，要用以下变异方法或者改变数据的引用或者$set()方法
+      // push、pop、shift、unshift、splice、sort、reverse
+      // vm.$set(vm.list,1,{id:'001',text:'David'})
+      var vm = new Vue({
+        el: '#app',
+        data: {
+          list: [
+            {
+              id: '001001',
+              text: 'Hello',
+            },
+            {
+              id: '001002',
+              text: 'Dell',
+            },
+            {
+              id: '001003',
+              text: 'Lee',
+            },
+          ],
+
+          // 要添加属性可以使用$set()
+          // vm.$set(vm.userInfo, "address","BeiJing")
+          userInfo: {
+            name: 'Dell',
+            age: 22,
+            gender: 'male',
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
