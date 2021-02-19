@@ -4,31 +4,51 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>给组件绑定原生事件</title>
+    <title>Vue中的插槽(slot)</title>
     <script src="vue.js"></script>
   </head>
   <body>
     <div id="app">
-      <child @click="handleClick"></child>
+      <!-- <child content="<p>Dell</p>"></child> -->
+
+      <!-- 使用插槽 -->
+      <child>
+        <p>Dell</p>
+      </child>
+
+      <body-content>
+        <div class="header" slot="header">header</div>
+        <div class="footer" slot="footer">footer</div>
+      </body-content>
     </div>
 
     <script>
       Vue.component('child', {
-        template: '<div @click="handleChildClick">Child</div>',
-        methods: {
-          handleChildClick: function () {
-            alert('click child');
-          },
-        },
+        props: ['content'],
+        // 使用插值表达式无法渲染p标签等dom结构，需要用v-html
+        // 但是这样会在p标签外面包裹一个div，且用template占位符也无法取代
+        // template: `<div>
+        //               <p>hello</p>
+        //               <div v-html="content"></div>
+        //           </div>`,
+
+        // 使用插槽
+        // template: `<div>
+        //             <slot>默认内容</slot>
+        //           </div>`,
+      });
+
+      Vue.component('body-content', {
+        // 默认插槽是组件内的所有内容，若要指定多个插槽，可以使用具名插槽
+        template: `<div>
+                    <slot name='header'></slot>
+                    <div class='content'>content</div>
+                    <slot name='footer'></slot>
+                  </div>`,
       });
 
       var vm = new Vue({
         el: '#app',
-        methods: {
-          handleClick: function () {
-            alert('click');
-          },
-        },
       });
     </script>
   </body>

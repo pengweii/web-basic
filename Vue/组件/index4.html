@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>给组件绑定原生事件</title>
+    <script src="vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <!-- 自定义事件，要通过$emit()触发 -->
+      <!-- <child @click="handleClick"></child> -->
+
+      <!-- 要想不通过两层触发，可以使用native修饰 -->
+      <child @click.native="handleClick"></child>
+    </div>
+
+    <script>
+      Vue.component('child', {
+        // 原生事件，可以触发；两层触发。添加native后就不用handleChildClick了
+        template: '<div @click="handleChildClick">Child</div>',
+        methods: {
+          handleChildClick: function () {
+            alert('click child');
+            // 点击后先触发了handleChildClick，然后通过$emit('click')向外传递，父组件监听了click，所以再触发handleClick
+            // this.$emit('click');
+          },
+        },
+      });
+
+      var vm = new Vue({
+        el: '#app',
+        methods: {
+          // 点击Child时不会弹出click，要使用$emit()
+          handleClick: function () {
+            alert('click');
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
